@@ -1,0 +1,41 @@
+name: Automatic Change Date
+
+on:
+  push:
+    branches:
+      - master
+
+  schedule:
+    - cron: '0 */4 * * *'
+
+jobs:
+  change_date:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: node index.js
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "${{ secrets.email }}"
+          git config --local user.name "${{ secrets.name }}"
+          git add -A
+          git commit -m "Current `date '+%d/%m/%Y %H:%M:%S'`"
+
+      - name: GitHub Push
+        uses: ad-m/github-push-action@v0.5.0
+        with:
+          force: true
+          directory: "."
+          github_token: ${{ secrets.GITHUB_TOKEN }}
