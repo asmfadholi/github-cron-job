@@ -32,6 +32,7 @@ jobs:
           git config --local user.name "${{ secrets.name }}"
           git add -A
           git commit -m "Current `date '+%d/%m/%Y %H:%M:%S'`"
+          git checkout -b "production"
 
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.5.0
