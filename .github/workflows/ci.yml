@@ -3,7 +3,7 @@ name: Automatic Change Date
 on:
   push:
     branches:
-      - production
+      - test
 
   schedule:
     - cron: '0 */8 * * *'
